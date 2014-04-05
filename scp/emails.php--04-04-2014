@@ -79,7 +79,7 @@ if($_POST){
 
 $page='emails.inc.php';
 if($email || ($_REQUEST['a'] && !strcasecmp($_REQUEST['a'],'add')))
-  $page='email.inc.php';
+    $page='email.inc.php';
 
 $nav->setTabActive('emails');
 require(STAFFINC_DIR.'header.inc.php');

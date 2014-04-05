@@ -7,7 +7,7 @@ if($email && $_REQUEST['a']!='add'){
     $action='update';
     $submit_text='Save Changes';
     $info=$email->getInfo();
-	$info['id']=$email->getId();
+    $info['id']=$email->getId();
     if($info['mail_delete'])
         $info['postfetch']='delete';
     elseif($info['mail_archivefolder'])
@@ -113,16 +113,44 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
                 email. Override global and dept. settings.
             </td>
         </tr>
-        <tr>
-            <!--<th colspan="2">
-                <em><strong>Login Information:</strong>: Optional BUT required when IMAP/POP or SMTP (with auth.) are enabled.</em>
-            </th>-->
-       
+        
         <tr>
             <th colspan="2">
                 <em><strong>Mail Account</strong>: Optional setting for fetching incoming emails. Mail fetching must be enabled with autocron active or external cron setup. &nbsp;<font class="error">&nbsp;<?php echo $errors['mail']; ?></font></em>
             </th>
         </tr>
+        
+        <!------------------------------------------------ username for POP/IMAP -------------------------------------->
+        
+        <tr>
+            <th colspan="2">
+                <em><strong>Login Information:</strong>: Optional BUT required when IMAP/POP or SMTP (with auth.) are enabled.</em>
+            </th>
+        </tr>
+        <tr>
+            <td width="180">
+                Username
+            </td>
+            <td>
+                <input type="text" size="35" name="userid" value="<?php echo $info['userid']; ?>"
+                    autocomplete="off" autocorrect="off">
+                &nbsp;<span class="error">&nbsp;<?php echo $errors['userid']; ?>&nbsp;</span>
+            </td>
+        </tr>
+        <tr>
+            <td width="180">
+               Password
+            </td>
+            <td>
+                <input type="password" size="35" name="passwd" value="<?php echo $info['passwd']; ?>"
+                    autocomplete="off">
+                &nbsp;<span class="error">&nbsp;<?php echo $errors['passwd']; ?>&nbsp;</span>
+                <br><em><?php echo $passwdtxt; ?></em>
+            </td>
+        </tr>
+        
+        <!------------------------------------------------ End username for POP/IMAP -------------------------------------->
+        
         <tr><td>Status</td>
             <td>
                 <label><input type="radio" name="mail_active"  value="1"   <?php echo $info['mail_active']?'checked="checked"':''; ?> /><strong>Enable</strong></label>
@@ -131,32 +159,6 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
                 &nbsp;<font class="error">&nbsp;<?php echo $errors['mail_active']; ?></font>
             </td>
         </tr>
-        
-         </tr>
-        <tr>
-            <td width="180">
-                Username
-            </td>
-            <td>
-            
-            
-                <input type="text" size="35" name="piusername" value="<?php echo $info['popimap']; ?>"
-                    autocomplete="off" autocorrect="off">
-                &nbsp;<span class="error">&nbsp;<?php  echo $errors['popimap']; ?>&nbsp;</span>
-            </td>
-        </tr>
-        <tr>
-            <td width="180">
-               Password
-            </td>
-            <td>
-                <input type="password" size="35" name="pipassword" value="<?php echo $info['pipassword']; ?>"
-                    autocomplete="off">
-                &nbsp;<span class="error">&nbsp;<?php echo $errors['passwd']; ?>&nbsp;</span>
-                <br><em><?php echo $passwdtxt; ?></em>
-            </td>
-        </tr>
-        
         <tr><td>Host</td>
             <td><input type="text" name="mail_host" size=35 value="<?php echo $info['mail_host']; ?>">
                 &nbsp;<font class="error">&nbsp;<?php echo $errors['mail_host']; ?></font>
@@ -167,6 +169,10 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
                 &nbsp;<font class="error">&nbsp;<?php echo $errors['mail_port']; ?></font>
             </td>
         </tr>
+        
+      
+        
+        
         <tr><td>Protocol</td>
             <td>
                 <select name="mail_protocol">
@@ -217,29 +223,10 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
                 <em><strong>SMTP Settings</strong>: When enabled the <b>email account</b> will use SMTP server instead of internal PHP mail() function for outgoing emails. &nbsp;<font class="error">&nbsp;<?php echo $errors['smtp']; ?></font></em>
             </th>
         </tr>
-       
+         <!--------------------------------------------------  SMTP username ----------------------------------------->
         
         
-        
-        <tr><td>Status</td>
-            <td>
-                <label><input type="radio" name="smtp_active"  value="1"   <?php echo $info['smtp_active']?'checked':''; ?> />Enable</label>
-                <label><input type="radio" name="smtp_active"  value="0"   <?php echo !$info['smtp_active']?'checked':''; ?> />Disable</label>
-                &nbsp;<font class="error">&nbsp;<?php echo $errors['smtp_active']; ?></font>
-            </td>
-        </tr>
-        <tr><td>SMTP Host</td>
-            <td><input type="text" name="smtp_host" size=35 value="<?php echo $info['smtp_host']; ?>">
-                &nbsp;<font class="error">&nbsp;<?php echo $errors['smtp_host']; ?></font>
-            </td>
-        </tr>
-        <tr><td>SMTP Port</td>
-            <td><input type="text" name="smtp_port" size=6 value="<?php echo $info['smtp_port']?$info['smtp_port']:''; ?>">
-                &nbsp;<font class="error">&nbsp;<?php echo $errors['smtp_port']; ?></font>
-            </td>
-        </tr>
-		
-		<tr>
+       <?php /* <tr>
             <td width="180">
                 Username
             </td>
@@ -259,9 +246,31 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info);
                 &nbsp;<span class="error">&nbsp;<?php echo $errors['passwd']; ?>&nbsp;</span>
                 <br><em><?php echo $passwdtxt; ?></em>
             </td>
+        </tr> */?>
+        
+        <!--------------------------------------------------  End SMTP username ----------------------------------------->
+        
+        <tr><td>Status</td>
+            <td>
+                <label><input type="radio" name="smtp_active"  value="1"   <?php echo $info['smtp_active']?'checked':''; ?> />Enable</label>
+                <label><input type="radio" name="smtp_active"  value="0"   <?php echo !$info['smtp_active']?'checked':''; ?> />Disable</label>
+                &nbsp;<font class="error">&nbsp;<?php echo $errors['smtp_active']; ?></font>
+            </td>
         </tr>
-        <tr>
-		
+        <tr><td>SMTP Host</td>
+            <td><input type="text" name="smtp_host" size=35 value="<?php echo $info['smtp_host']; ?>">
+                &nbsp;<font class="error">&nbsp;<?php echo $errors['smtp_host']; ?></font>
+            </td>
+        </tr>
+        <tr><td>SMTP Port</td>
+            <td><input type="text" name="smtp_port" size=6 value="<?php echo $info['smtp_port']?$info['smtp_port']:''; ?>">
+                &nbsp;<font class="error">&nbsp;<?php echo $errors['smtp_port']; ?></font>
+            </td>
+        </tr>
+       
+    
+        
+        
         <tr><td>Authentication Required?</td>
             <td>
 

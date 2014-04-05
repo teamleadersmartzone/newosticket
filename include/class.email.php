@@ -241,7 +241,10 @@ class Email {
 
         if($vars['mail_active'] || ($vars['smtp_active'] && $vars['smtp_auth'])) {
             if(!$vars['userid'])
-                $errors['userid']='Username missing';
+                $errors['userid']='SMTP Username missing';
+				
+				/*if(!$vars['popimap'])
+                $errors['popimap']='POP/IMAP Username missing';*/
 
             if(!$id && !$vars['passwd'])
                 $errors['passwd']='Password required';
@@ -298,14 +301,21 @@ class Email {
         }
 
         $passwd=$vars['passwd']?$vars['passwd']:$vars['cpasswd'];
+		
+				
+		$popimappassowrd = $vars['pipassword'];
+		
+		
+		
+		
         if(!$errors && $vars['mail_active']) {
             //note: password is unencrypted at this point...MailFetcher expect plain text.
-            $fetcher = new MailFetcher(
+        $fetcher = new MailFetcher(
                     array(
                         'host'  => $vars['mail_host'],
                         'port'  => $vars['mail_port'],
-                        'username'  => $vars['userid'],
-                        'password'  => $passwd,
+                        'username'  => $vars['piusername'],
+                        'password'  => $popimappassowrd,
                         'protocol'  => $vars['mail_protocol'],
                         'encryption' => $vars['mail_encryption'])
                     );
@@ -354,6 +364,8 @@ class Email {
              ',dept_id='.db_input($vars['dept_id']).
              ',priority_id='.db_input($vars['priority_id']).
              ',noautoresp='.db_input(isset($vars['noautoresp'])?1:0).
+			 ',popimap='.db_input($vars['piusername']).
+			 ',pipassword='.db_input($vars['pipassword']).
              ',userid='.db_input($vars['userid']).
              ',mail_active='.db_input($vars['mail_active']).
              ',mail_host='.db_input($vars['mail_host']).
@@ -387,7 +399,10 @@ class Email {
 
             $errors['err']='Unable to update email. Internal error occurred';
         }else {
-            $sql='INSERT INTO '.EMAIL_TABLE.' SET '.$sql.',created=NOW()';
+			
+			
+			
+           $sql='INSERT INTO '.EMAIL_TABLE.' SET '.$sql.',created=NOW()';
             if(db_query($sql) && ($id=db_insert_id()))
                 return $id;
 
